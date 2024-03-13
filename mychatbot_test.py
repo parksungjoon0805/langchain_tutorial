@@ -8,27 +8,20 @@ load_dotenv()
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# main.py
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import ChatMessage
 import streamlit as st
-import csv
+
 API_KEY = os.getenv("OPENAI_API_KEY")
 MODEL="gpt-4-0125-preview"
 
-def crawl_namuwiki(topic):
-    # 나무위키 주소 설정
+def crawl_namuwiki(topic):   
     url = f"https://namu.wiki/w/{topic}"
-    
-    # HTTP 요청 보내기
     response = requests.get(url)
-    
+
     if response.status_code == 200:
-        # HTML 파싱
         soup = BeautifulSoup(response.content, "html.parser")
-        
-        # 필요한 내용 추출
         content_tag = soup.find("div", {"class": "wiki-content"})
         if content_tag:
             content = content_tag.text.strip()
@@ -37,10 +30,6 @@ def crawl_namuwiki(topic):
             return "해당 주제의 내용을 찾을 수 없습니다."
     else:
         return "페이지를 찾을 수 없습니다."
-
-
-
-
 
 class StreamHandler(BaseCallbackHandler):
     def __init__(self, container, initial_text=""):
@@ -56,11 +45,8 @@ content
 {}
 """
 
-# 나무위키에서 특정 주제의 내용 크롤링
-topic = "마이클_조던"  # 크롤링할 주제 설정
+topic = "마이클_조던"  
 content = crawl_namuwiki(topic)
-
-
 st.header("백엔드 스쿨/파이썬 2회차(9기)")
 st.info("마이클 조던에 대해 알아볼 수 있는 Q&A 로봇입니다.")
 st.error("마이클 조던에 대한 내용이 적용되어 있습니다.")
